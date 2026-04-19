@@ -56,26 +56,19 @@ window.addEventListener('DOMContentLoaded', () => {
   const body = document.body;
 
   if (mainContent && sidebar) {
+    // Toggle on touch/click
+    sidebar.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768) {
+        body.classList.toggle('sidebar-expanded');
+      }
+    });
+
     // Collapse on scroll
     mainContent.addEventListener('scroll', () => {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 768 && body.classList.contains('sidebar-expanded')) {
         body.classList.remove('sidebar-expanded');
       }
     }, { passive: true });
-
-    // Expand on touch/hover
-    sidebar.addEventListener('touchstart', (e) => {
-      if (window.innerWidth <= 768) {
-        body.classList.add('sidebar-expanded');
-      }
-    }, { passive: true });
-
-    // Also support hover for desktop/tablet
-    sidebar.addEventListener('mouseenter', () => {
-      if (window.innerWidth <= 768) {
-        body.classList.add('sidebar-expanded');
-      }
-    });
   }
 });
 
