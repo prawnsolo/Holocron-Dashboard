@@ -85,14 +85,27 @@ function getTopActions() {
     .slice(0, 3);
 }
 
-// --- SYNC LOGIC ---
+// --- SYNC & AUTH LOGIC ---
+let BRAIN_KEY = localStorage.getItem('holocron_key');
+
 async function syncOB1() {
-  if (typeof CONFIG === 'undefined') return;
+  if (typeof CONFIG === 'undefined' || !BRAIN_KEY) {
+    showLogin();
+    return;
+  }
   
   try {
     const res = await fetch(`${CONFIG.API_BASE}`, {
-        headers: { 'x-brain-key': CONFIG.BRAIN_KEY }
+        headers: { 'x-brain-key': BRAIN_KEY }
     });
+    
+    if (res.status === 401) {
+      localStorage.removeItem('holocron_key');
+      BRAIN_KEY = null;
+      showLogin('Invalid Access Key');
+      return;
+    }
+
     if (!res.ok) throw new Error('Sync failed');
     const data = await res.json();
     
@@ -106,12 +119,62 @@ async function syncOB1() {
       STATE.memoryStats.categories = data.stats.types;
     }
     
+    hideLogin();
     console.log('OB1 Sync Complete');
     window.dispatchEvent(new CustomEvent('ob1-synced'));
   } catch (err) {
     console.error('OB1 Sync Error:', err);
+    // Keep showing dashboard with mock data if it's just a network error, 
+    // but stay authenticated if we have a key.
+    if (BRAIN_KEY) hideLogin(); 
   }
 }
 
-// Initial sync
-syncOB1();
+function showLogin(error = '') {
+  const overlay = document.getElementById('loginOverlay');
+  const errorEl = document.getElementById('loginError');
+  if (overlay) overlay.classList.add('active');
+  if (errorEl) errorEl.textContent = error;
+}
+
+function hideLogin() {
+  const overlay = document.getElementById('loginOverlay');
+  if (overlay) overlay.classList.remove('active');
+}
+
+async function handleLogin() {
+  const input = document.getElementById('accessKeyInput');
+  const btn = document.getElementById('loginBtn');
+  const key = input.value.trim();
+  
+  if (!key) return;
+  
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+  
+  BRAIN_KEY = key;
+  await syncOB1();
+  
+  if (BRAIN_KEY) {
+    localStorage.setItem('holocron_key', BRAIN_KEY);
+    input.value = '';
+  }
+  
+  btn.disabled = false;
+  btn.textContent = 'Authorize';
+}
+
+// Initial setup
+window.addEventListener('DOMContentLoaded', () => {
+  const loginBtn = document.getElementById('loginBtn');
+  if (loginBtn) loginBtn.addEventListener('click', handleLogin);
+  
+  const loginInput = document.getElementById('accessKeyInput');
+  if (loginInput) {
+    loginInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleLogin();
+    });
+  }
+  
+  syncOB1();
+});

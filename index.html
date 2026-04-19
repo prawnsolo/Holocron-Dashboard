@@ -73,6 +73,25 @@
     <div id="tab-memory"    class="tab-panel"></div>
     <div id="tab-weekly"    class="tab-panel"></div>
   </main>
+  
+  <!-- LOGIN OVERLAY -->
+  <div id="loginOverlay" class="login-overlay active">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg viewBox="0 0 40 40" fill="none" style="width:60px;height:60px">
+          <polygon points="20,2 38,20 20,38 2,20" stroke="var(--color-primary)" stroke-width="2" fill="none"/>
+          <circle cx="20" cy="20" r="4" fill="var(--color-primary)"/>
+        </svg>
+      </div>
+      <h2>IDENTITY VERIFICATION</h2>
+      <p>Secure link to OB1 System required.</p>
+      <div class="login-field">
+        <input type="password" id="accessKeyInput" placeholder="Enter Holocron Access Key..." />
+        <button id="loginBtn">Authorize</button>
+      </div>
+      <div id="loginError" class="login-error"></div>
+    </div>
+  </div>
 
   <script src="js/config.js"></script>
   <script src="js/state.js"></script>
