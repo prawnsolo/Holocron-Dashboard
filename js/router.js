@@ -49,6 +49,36 @@ window.addEventListener('DOMContentLoaded', () => {
   }, 1000);
 });
 
+// Mobile Sidebar Logic
+window.addEventListener('DOMContentLoaded', () => {
+  const mainContent = document.querySelector('.main-content');
+  const sidebar = document.querySelector('.sidebar');
+  const body = document.body;
+
+  if (mainContent && sidebar) {
+    // Collapse on scroll
+    mainContent.addEventListener('scroll', () => {
+      if (window.innerWidth <= 768) {
+        body.classList.remove('sidebar-expanded');
+      }
+    }, { passive: true });
+
+    // Expand on touch/hover
+    sidebar.addEventListener('touchstart', (e) => {
+      if (window.innerWidth <= 768) {
+        body.classList.add('sidebar-expanded');
+      }
+    }, { passive: true });
+
+    // Also support hover for desktop/tablet
+    sidebar.addEventListener('mouseenter', () => {
+      if (window.innerWidth <= 768) {
+        body.classList.add('sidebar-expanded');
+      }
+    });
+  }
+});
+
 // Dark mode toggle
 (function(){
   window.addEventListener('DOMContentLoaded', () => {
