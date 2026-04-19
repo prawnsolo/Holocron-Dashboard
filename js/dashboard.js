@@ -34,7 +34,7 @@ function renderDashboard() {
     </div>
 
     <!-- Two-col digest -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6)">
+    <div class="dashboard-digest">
 
       <!-- Top 3 Actions -->
       <div class="panel">
@@ -119,14 +119,10 @@ function personRow(person) {
   );
   return `
     <div class="task-item">
-      <div style="width:32px;height:32px;border-radius:var(--radius-full);
-        background:var(--color-primary-highlight);display:flex;
-        align-items:center;justify-content:center;
-        color:var(--color-primary);font-size:var(--text-xs);font-weight:700;
-        flex-shrink:0">
+      <div class="task-avatar">
         ${person.name.split(' ').map(n=>n[0]).join('')}
       </div>
-      <div style="flex:1">
+      <div style="flex:1; min-width: 0;">
         <div class="task-text">${person.name}</div>
         <div class="task-meta">${person.followUp} · ${daysSince}d ago</div>
       </div>
