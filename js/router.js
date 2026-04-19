@@ -93,3 +93,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 })();
+// Re-render when OB1 data is synced
+window.addEventListener('ob1-synced', () => {
+  const hash = location.hash.replace('#','') || 'dashboard';
+  navigate(hash);
+});

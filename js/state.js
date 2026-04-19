@@ -71,16 +71,9 @@ const STATE = {
 const TODAY = new Date().toISOString().split('T')[0];
 
 // Helper: is a task overdue?
-function isOverdue(task) {
-  return task.dueDate < TODAY && task.status !== 'done';
-}
+const isOverdue = (task) => task.dueDate < TODAY && task.status !== 'done';
+const isDueToday = (task) => task.dueDate === TODAY && task.status !== 'done';
 
-// Helper: is a task due today?
-function isDueToday(task) {
-  return task.dueDate === TODAY && task.status !== 'done';
-}
-
-// Helper: get top 3 priority tasks
 function getTopActions() {
   return STATE.tasks
     .filter(t => t.status !== 'done')
@@ -91,3 +84,34 @@ function getTopActions() {
     })
     .slice(0, 3);
 }
+
+// --- SYNC LOGIC ---
+async function syncOB1() {
+  if (typeof CONFIG === 'undefined') return;
+  
+  try {
+    const res = await fetch(`${CONFIG.API_BASE}`, {
+        headers: { 'x-brain-key': CONFIG.BRAIN_KEY }
+    });
+    if (!res.ok) throw new Error('Sync failed');
+    const data = await res.json();
+    
+    // Update the STATE with real values
+    if (data.tasks) STATE.tasks = data.tasks;
+    if (data.projects) STATE.projects = data.projects;
+    if (data.people) STATE.people = data.people;
+    if (data.memories) STATE.memories = data.memories;
+    if (data.stats) {
+      STATE.memoryStats.total = data.stats.total;
+      STATE.memoryStats.categories = data.stats.types;
+    }
+    
+    console.log('OB1 Sync Complete');
+    window.dispatchEvent(new CustomEvent('ob1-synced'));
+  } catch (err) {
+    console.error('OB1 Sync Error:', err);
+  }
+}
+
+// Initial sync
+syncOB1();
