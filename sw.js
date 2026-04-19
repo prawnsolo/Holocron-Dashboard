@@ -1,6 +1,6 @@
 const CACHE_NAME = 'holocron-v1';
 const ASSETS = [
-  'holocron.html',
+  'index.html',
   'css/tokens.css',
   'css/base.css',
   'css/components.css',

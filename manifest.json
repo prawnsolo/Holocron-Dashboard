@@ -1,7 +1,7 @@
 {
   "name": "The Holocron OB1",
   "short_name": "Holocron",
-  "start_url": "holocron.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0d0e11",
   "theme_color": "#00d4ff",
