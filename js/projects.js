@@ -23,8 +23,8 @@ function renderProjects() {
 
 function renderProjectList() {
   return `
-    <div class="panel">
-      <table style="width:100%; border-collapse: collapse;">
+    <div class="panel" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+      <table style="width:100%; border-collapse: collapse; min-width: 600px;">
         <thead>
           <tr style="border-bottom:1px solid var(--color-divider)">
             <th style="text-align:left;padding:var(--space-3);
@@ -65,25 +65,22 @@ function renderProjectKanban() {
   const labels  = { active:'Active', stalled:'Stalled', done:'Done' };
 
   return `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6)">
+    <div class="dashboard-digest">
       ${columns.map(col => `
-        <div>
-          <div style="font-family:var(--font-display);font-size:var(--text-sm);
-            color:var(--color-text-muted);letter-spacing:0.1em;
-            text-transform:uppercase;margin-bottom:var(--space-4)">
+        <div class="projects-kanban-column">
+          <div class="column-header">
             ${labels[col]}
-            <span class="badge badge-active" style="margin-left:var(--space-2)">
+            <span class="badge badge-active">
               ${STATE.projects.filter(p=>p.status===col).length}
             </span>
           </div>
           ${STATE.projects.filter(p=>p.status===col).map(p => `
-            <div class="panel" style="margin-bottom:var(--space-4);cursor:pointer; padding: var(--space-4)"
-              onclick="editProject(${p.id})">
-              <div style="font-weight:600;margin-bottom:var(--space-2)">${p.name}</div>
-              <div style="font-size:var(--text-xs);color:var(--color-text-muted);
-                margin-bottom:var(--space-3)">→ ${p.nextAction}</div>
-              ${p.tags.map(t=>`<span class="badge badge-active"
-                style="margin-right:4px">${t}</span>`).join('')}
+            <div class="panel kanban-card" onclick="editProject(${p.id})">
+              <div class="kanban-card-title">${p.name}</div>
+              <div class="kanban-card-meta">→ ${p.nextAction}</div>
+              <div class="kanban-card-tags">
+                ${p.tags.map(t=>`<span class="badge badge-active">${t}</span>`).join('')}
+              </div>
             </div>
           `).join('')}
         </div>

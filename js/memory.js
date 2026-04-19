@@ -20,7 +20,7 @@ function renderMemory() {
       ${kpiCard("Extensions", stats.extensions.length, "plug", "All active")}
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6)">
+    <div class="dashboard-digest">
 
       <!-- Category Cloud -->
       <div class="panel">
