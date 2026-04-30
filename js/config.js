@@ -1,3 +1,3 @@
 window.CONFIG = {
-    API_BASE: "https://pyhdzvqmkomrgqcbgqcy.supabase.co/functions/v1/holocron-api",
+    API_BASE: "https://sacrmmpxjfxqwscxggbx.supabase.co/functions/v1/holocron-api",
 };
